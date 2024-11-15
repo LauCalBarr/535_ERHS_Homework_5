@@ -41,15 +41,18 @@ homicides_2
 
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
-              filter(total_hom == TRUE)
+              
 baltimore 
 
 ```
 
 ```{r}
-  summarize(solved = sum(total_hom == TRUE), 
-                        unsolved = sum(total_hom == FALSE)) %>% 
-              mutate(solved = as.numeric(solved),
-                      unsolved = as.numeric(unsolved)) %>% 
-```
+baltimore_time <- ggplot(baltimore, aes(x = reported_date)) + 
+  geom_histogram(bins = 108) +
+  labs(y = "Montly homicides") +
+  ggtitle("Homicides in Baltimore, MD") +
+  theme_grey()
+baltimore_time 
 
+
+```
