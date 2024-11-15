@@ -41,7 +41,8 @@ homicides_2
 
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
-              
+              mutate(reported_month = month(reported_date)) %>% 
+              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "cold", "warm"))
 baltimore 
 
 ```
