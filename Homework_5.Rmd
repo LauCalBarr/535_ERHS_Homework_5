@@ -20,7 +20,7 @@ library(broom)
 library(purrr)
 ```
 
-Q_1 Reading data into R 
+Cleaning data 
 ```{r Q1 Reding Homicide data}
 url <- paste0("https://raw.githubusercontent.com/washingtonpost/",
               "data-homicides/refs/heads/master/homicide-data.csv")
@@ -34,4 +34,31 @@ homicides_2 <- homicides %>%
 
 homicides_2
 
+#new data frame
+#group by new columns closed without arrest and open
+#mutate by the new columns and count for the values 
+
+
+unsolved_db <- homicides_2 %>% 
+              mutate(total_hom = if_else(disposition == "Closed without arrest"| disposition == "Closed by arrest", TRUE, FALSE)) %>% 
+              group_by(city_name) %>% 
+              summarize(solved = sum(total_hom == TRUE), 
+                        unsolved = sum(total_hom == FALSE)) %>% 
+              mutate(solved = as.numeric(solved),
+                      unsolved = as.numeric(unsolved)) %>% 
+              mutate(total = rowSums(select(., solved, unsolved), na.rm = TRUE))
+            
+    unsolved_db
+
+unsolved_db <- unsolved_db[-c(49), ]
+    unsolved_db
+
 ```
+
+```{r}
+
+
+
+
+```
+
