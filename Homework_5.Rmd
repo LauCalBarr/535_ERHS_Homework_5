@@ -31,35 +31,25 @@ head(homicides, n = 5)
 #mutate a new column
 homicides_2 <- homicides %>% 
   mutate(city_name = paste(city, state, sep=", ") ) %>% 
-  mutate(reported_date = ymd(reported_date))
-
+  mutate(reported_date = ymd(reported_date)) %>% 
+  mutate(total_hom = if_else(disposition == "Closed without arrest"| disposition == "Closed by arrest", TRUE, FALSE))
 homicides_2
 
-#new data frame
-#group by new columns closed without arrest and open
-#mutate by the new columns and count for the values 
+```
 
+```{r baltimore}
 
-unsolved_db <- homicides_2 %>% 
-              mutate(total_hom = if_else(disposition == "Closed without arrest"| disposition == "Closed by arrest", TRUE, FALSE))%>% 
-              group_by(city_name) %>% 
-              summarize(solved = sum(total_hom == TRUE), 
-                        unsolved = sum(total_hom == FALSE)) %>% 
-              mutate(solved = as.numeric(solved),
-                      unsolved = as.numeric(unsolved)) %>% 
-              mutate(total = rowSums(select(., solved, unsolved, ), na.rm = TRUE))
-            
-    unsolved_db
-
-unsolved_db <- unsolved_db[-c(49), ]
-    unsolved_db
+baltimore <- homicides_2 %>% 
+              filter(city == "Baltimore") %>% 
+              filter(total_hom == TRUE)
+baltimore 
 
 ```
 
 ```{r}
-
-
-
-
+  summarize(solved = sum(total_hom == TRUE), 
+                        unsolved = sum(total_hom == FALSE)) %>% 
+              mutate(solved = as.numeric(solved),
+                      unsolved = as.numeric(unsolved)) %>% 
 ```
 
