@@ -42,13 +42,13 @@ homicides_2
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
               mutate(reported_month = month(reported_date)) %>% 
-              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "cold", "warm"))
+              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer"))
 baltimore 
 
 ```
 
 ```{r}
-baltimore_time <- ggplot(baltimore, aes(x = reported_date)) + 
+baltimore_time <- ggplot(baltimore, aes(x = reported_date, color = temperature))+ 
   geom_histogram(bins = 108) +
   labs(y = "Montly homicides") +
   ggtitle("Homicides in Baltimore, MD") +
