@@ -48,11 +48,16 @@ baltimore
 ```
 
 ```{r}
-baltimore_time <- ggplot(baltimore, aes(x = reported_date, color = temperature))+ 
+baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
   geom_histogram(bins = 108) +
   labs(y = "Montly homicides") +
   ggtitle("Homicides in Baltimore, MD") +
-  theme_grey()
+  scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
+  theme_grey()+
+  theme(legend.position = "bottom",
+        legend.title = element_blank())+
+  
+  
 baltimore_time 
 
 
