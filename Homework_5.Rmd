@@ -30,7 +30,8 @@ head(homicides, n = 5)
 
 #mutate a new column
 homicides_2 <- homicides %>% 
-  mutate(city_name = paste(city, state, sep=", ") )
+  mutate(city_name = paste(city, state, sep=", ") ) %>% 
+  mutate(reported_date = ymd(reported_date))
 
 homicides_2
 
@@ -40,13 +41,13 @@ homicides_2
 
 
 unsolved_db <- homicides_2 %>% 
-              mutate(total_hom = if_else(disposition == "Closed without arrest"| disposition == "Closed by arrest", TRUE, FALSE)) %>% 
+              mutate(total_hom = if_else(disposition == "Closed without arrest"| disposition == "Closed by arrest", TRUE, FALSE))%>% 
               group_by(city_name) %>% 
               summarize(solved = sum(total_hom == TRUE), 
                         unsolved = sum(total_hom == FALSE)) %>% 
               mutate(solved = as.numeric(solved),
                       unsolved = as.numeric(unsolved)) %>% 
-              mutate(total = rowSums(select(., solved, unsolved), na.rm = TRUE))
+              mutate(total = rowSums(select(., solved, unsolved, ), na.rm = TRUE))
             
     unsolved_db
 
