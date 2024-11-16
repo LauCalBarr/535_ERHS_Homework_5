@@ -51,7 +51,7 @@ arrest <- as.Date("2015-04-30")
 ```{r}
 baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
   geom_histogram( bins = 108) +
-  #geom_freqpoly(stat = "bin", color = "blue")+
+  geom_freqpoly(stat = "bin", color = "blue")+
   ggtitle("Homicides in Baltimore, MD") +
   scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
   theme_grey()+
