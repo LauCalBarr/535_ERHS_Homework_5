@@ -45,20 +45,22 @@ baltimore <- homicides_2 %>%
               mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer"))
 baltimore 
 
+arrest <- as.Date("2015-04-30")
 ```
 
 ```{r}
 baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
-  geom_histogram(bins = 108) +
-  labs(y = "Montly homicides") +
+  geom_histogram( bins = 108) +
+  #geom_freqpoly(stat = "bin", color = "blue")+
   ggtitle("Homicides in Baltimore, MD") +
   scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
   theme_grey()+
   theme(legend.position = "bottom",
         legend.title = element_blank())+
-  
+  geom_vline(xintercept = arrest, linetype="dashed", color = "red", size= 0.5)+
+
   
 baltimore_time 
 
-
+  
 ```
