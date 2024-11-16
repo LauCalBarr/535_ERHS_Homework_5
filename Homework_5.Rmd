@@ -58,7 +58,8 @@ baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
   theme(legend.position = "bottom",
         legend.title = element_blank())+
   geom_vline(xintercept = arrest, linetype="dashed", color = "red", size= 0.5)+
-
+   geom_text(aes(x = arrest, y = 50, label = "Arrest of Freddie Carlos Grey"),
+    color = "black", size = 2.5)
   
 baltimore_time 
 
