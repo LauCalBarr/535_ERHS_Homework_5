@@ -42,72 +42,40 @@ homicides_2
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
               mutate(reported_month = month(reported_date)) %>% 
+              mutate(year_r = year(reported_date)) %>% 
               mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer")) %>% 
               mutate(year_month = format(reported_date, "%Y-%m")) %>% 
-              mutate(year_month = as.factor(year_month)) %>% 
-              group_by(year_month, temperature) %>%
-              nest()
+              mutate(year_month = as.factor(year_month))
 baltimore
 
 arrest <- as.Date("2015-04-30")
 ```
 ```{r}
+balt_month <- baltimore %>% 
+  group_by(year_r,reported_month, temperature) %>% 
+  summarize(n_homicides = n()) %>% 
+  mutate(date_b = ymd(paste(year_r,reported_month,"1",sep = "-")))
+         
+balt_month
 
 ```
-
-
 ```{r}
-baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
-  geom_histogram (bins=108) +
-  #geom_freqpoly(aes(x= reported_date, stat = "bin", color = "blue"))+
-  ggtitle("Homicides in Baltimore, MD") +
+
+balt_plot <- ggplot(balt_month, aes(x = date_b, y = n_homicides)) +
+  geom_bar(stat = "identity", aes(fill = temperature)) +  
+  geom_smooth(span = 0.1, se = F)+
+  labs(title = "Homicides Baltimore",
+       x = "Date", 
+       y = "Montly Homicides") +
+   theme_grey()+
   scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
-  theme_grey()+
   theme(legend.position = "bottom",
         legend.title = element_blank())+
   geom_vline(xintercept = arrest, linetype="dashed", color = "red", size= 0.5)+
    geom_text(aes(x = arrest, y = 50, label = "Arrest of Freddie Carlos Grey"),
     color = "black", size = 2.5)
-  
-baltimore_time 
-  
-```
-```{r}
-baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
-  geom_col(stat="identity") + geom_smooth(aes(group=1),method = "lm", se= F)+
-  #geom_freqpoly(aes(x= reported_date, stat = "bin", color = "blue"))+
-  ggtitle("Homicides in Baltimore, MD") +
-  scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
-  theme_grey()+
-  theme(legend.position = "bottom",
-        legend.title = element_blank())+
-  geom_vline(xintercept = arrest, linetype="dashed", color = "red", size= 0.5)+
-   geom_text(aes(x = arrest, y = 50, label = "Arrest of Freddie Carlos Grey"),
-    color = "black", size = 2.5)
-  
-baltimore_time 
-  
+
+balt_plot
 ```
 
-```{r}
-baltimore2 <- homicides_2 %>% 
-              filter(city == "Baltimore") %>% 
-              mutate(year_month = format(reported_date, "%Y-%m")) %>% 
-              mutate(reported_month = month(reported_date)) %>% 
-              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer")) %>% 
-              mutate(year_month = as.factor(year_month)) %>% 
-              group_by(year_month , temperature) %>% 
-              summarize(month_homicides = n()) %>% 
-              ungroup()
-
-arrest <- as.Date("2015-04-30")
-
-```
-
-```{r}
-str(baltimore2)
-baltimote_plot2 <- ggplot(baltimore2, aes(x = year_month, y = month_homicides)) +
-  geom_bar(stat = "identity", fill=temperature) + geom_smooth(method = "loess")
-baltimote_plot2 
-```
 
