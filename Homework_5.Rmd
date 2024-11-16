@@ -42,11 +42,7 @@ homicides_2
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
               mutate(reported_month = month(reported_date)) %>% 
-              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer")) %>% 
-              mutate(year_month = format(reported_date, "%Y-%m")) %>% 
-              mutate(year_month = as.factor(year_month)) %>% 
-              group_by(year_month) %>% 
-              summarize(month_homicides = n(), .groups = 'drop')
+              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer"))
 baltimore 
 
 arrest <- as.Date("2015-04-30")
@@ -66,33 +62,30 @@ baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
     color = "black", size = 2.5)
   
 baltimore_time 
-
-baltimore_time1 <- ggplot(baltimore, aes(x = reported_date, y= fill = temperature))+
-  geom_bar() + geom_smooth(method = "auto") 
-
-baltimore_time1
-
-homicides_3 <- homicides_2 %>% 
-  
-
   
 ```
 ```{r}
-baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
-  geom_bar( ) +
-  #geom_freqpoly(aes(x= reported_date, stat = "bin", color = "blue"))+
-  ggtitle("Homicides in Baltimore, MD") +
-  scale_fill_manual(values = c("Summer" = "gray", "Winter" = "skyblue"))+
-  theme_grey()+
-  theme(legend.position = "bottom",
-        legend.title = element_blank())+
-  geom_vline(xintercept = arrest, linetype="dashed", color = "red", size= 0.5)+
-   geom_text(aes(x = arrest, y = 50, label = "Arrest of Freddie Carlos Grey"),
-    color = "black", size = 2.5)
-  
-baltimore_time 
 
-baltimore_time + geom_smooth(se = FALSE)
+baltimore2 <- homicides_2 %>% 
+              filter(city == "Baltimore") %>% 
+              mutate(year_month = format(reported_date, "%Y-%m")) %>% 
+              mutate(reported_month = month(reported_date)) %>% 
+              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer")) %>% 
+              mutate(year_month = as.factor(year_month)) %>% 
+              group_by(year_month) %>% 
+              summarize(month_homicides = n(),
+                                  temperature,
+                                  reported_date) %>% 
+              ungroup()
+baltimore2 
 
+arrest <- as.Date("2015-04-30")
+
+```
+```{r}
+str(baltimore2)
+baltimote_plot <- ggplot(baltimore2, aes(x = year_month, y = month_homicides, fill = temperature)) +
+  geom_bar(stat="identity") + geom_smooth(aes(group=1),method = "lm", se= F)
+baltimote_plot 
 ```
 
