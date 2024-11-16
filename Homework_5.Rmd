@@ -42,11 +42,19 @@ homicides_2
 baltimore <- homicides_2 %>% 
               filter(city == "Baltimore") %>% 
               mutate(reported_month = month(reported_date)) %>% 
-              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer"))
-baltimore 
+              mutate(temperature =ifelse(reported_month %in% c(11,12,1,2,3,4), "Winter", "Summer")) %>% 
+              mutate(year_month = format(reported_date, "%Y-%m")) %>% 
+              mutate(year_month = as.factor(year_month)) %>% 
+              group_by(year_month, temperature) %>%
+              nest()
+baltimore
 
 arrest <- as.Date("2015-04-30")
 ```
+```{r}
+
+```
+
 
 ```{r}
 baltimore_time <- ggplot(baltimore, aes(x = reported_date, fill = temperature))+
